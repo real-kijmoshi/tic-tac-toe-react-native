@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { 
   StyleSheet, 
   Text, 
@@ -13,15 +13,16 @@ import {
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useFonts } from 'expo-font';
 import { Settings, UserRound, Gamepad2, Users, Bot, Wifi } from 'lucide-react-native';
+import Game from './Game';
 
 const { width } = Dimensions.get('window');
 
 export default function App() {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
-  
-  // Debug log to check what colorScheme is returning
-  console.log('Current color scheme:', colorScheme);
+  const [gameInProgress, setGameInProgress] = useState(false);
+  const [gameMode, setGameMode] = useState(null);
+  const [playerName, setPlayerName] = useState('');
 
   const [fontsLoaded] = useFonts({
     'Chango-Regular': require('../assets/fonts/Chango-Regular.ttf'),
@@ -30,7 +31,7 @@ export default function App() {
   const [fadeAnim] = useState(new Animated.Value(0));
   const [scaleAnim] = useState(new Animated.Value(0.8));
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (fontsLoaded) {
       Animated.parallel([
         Animated.timing(fadeAnim, {
@@ -49,13 +50,13 @@ export default function App() {
   }, [fontsLoaded, fadeAnim, scaleAnim]);
 
   const handleButtonPress = useCallback((gameMode) => {
-    const buttonActions = {
-      stranger: () => Alert.alert('Coming Soon!', 'Online multiplayer will be available in the next update.'),
-      friend: () => Alert.alert('Local Multiplayer', 'Starting game with a friend...'),
-      ai: () => Alert.alert('AI Mode', 'Starting game against AI...')
-    };
-    
-    buttonActions[gameMode]?.();
+    if (gameInProgress) {
+      Alert.alert('Game in Progress', 'Please finish the current game before starting a new one.');
+      return;
+    }
+
+    setGameMode(gameMode);
+    setGameInProgress(true);
   }, []);
 
   const handleNavPress = useCallback((action) => {
@@ -67,7 +68,6 @@ export default function App() {
     navActions[action]?.();
   }, []);
 
-  // Dynamic styles based on theme
   const dynamicStyles = StyleSheet.create({
     container: {
       flex: 1,
@@ -128,6 +128,17 @@ export default function App() {
       </View>
     );
   }
+
+  if(gameInProgress) {
+    return (
+      <Game
+        type={gameMode} // 'stranger', 'friend', or 'ai'
+        playerName={playerName}
+        onGameEnd={() => setGameInProgress(false)}
+      />
+    );
+  }
+
 
   return (
     <SafeAreaProvider>
