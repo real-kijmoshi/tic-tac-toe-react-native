@@ -2,7 +2,10 @@
 
 A modern, multiplayer Tic Tac Toe game built with React Native and Expo.
 
-![Home Screen](./screenshots/home-mockup.jpg)
+<div style="display: flex; gap: 20px; justify-content: center; align-items: center;">
+    <img src="./screenshots/home-mockup.jpg" alt="Gameplay Screenshot" width="300" />
+    <img src="./screenshots/home-dark.jpg" alt="Gameplay Screenshot Dark Mode" width="300" />
+</div>
 
 ## Features
 

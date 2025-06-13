@@ -7,15 +7,22 @@ import {
   Animated,
   StatusBar,
   Alert,
-  Dimensions
+  Dimensions,
+  useColorScheme
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useFonts } from 'expo-font';
 import { Settings, UserRound, Gamepad2, Users, Bot, Wifi } from 'lucide-react-native';
 
 const { width } = Dimensions.get('window');
 
 export default function App() {
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
+  
+  // Debug log to check what colorScheme is returning
+  console.log('Current color scheme:', colorScheme);
+
   const [fontsLoaded] = useFonts({
     'Chango-Regular': require('../assets/fonts/Chango-Regular.ttf'),
   });
@@ -60,18 +67,75 @@ export default function App() {
     navActions[action]?.();
   }, []);
 
+  // Dynamic styles based on theme
+  const dynamicStyles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: isDark ? '#121212' : '#f8f9fa',
+    },
+    loadingContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: isDark ? '#121212' : '#f8f9fa',
+    },
+    loadingText: {
+      fontSize: 18,
+      color: isDark ? '#e0e0e0' : '#666',
+    },
+    title: {
+      fontSize: Math.min(width * 0.12, 48),
+      fontFamily: 'Chango-Regular',
+      textAlign: 'center',
+      color: isDark ? '#ffffff' : '#2c3e50',
+      marginBottom: 5,
+    },
+    subtitle: {
+      fontSize: 16,
+      color: isDark ? '#b0b0b0' : '#7f8c8d',
+      fontWeight: '500',
+    },
+    bottomNav: {
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      paddingVertical: 20,
+      paddingHorizontal: 40,
+      backgroundColor: isDark ? '#1e1e1e' : '#fff',
+      borderTopWidth: 1,
+      borderTopColor: isDark ? '#333' : '#ecf0f1',
+      marginBottom: -30,
+      paddingBottom: 50,
+    },
+    navText: {
+      marginTop: 4,
+      fontSize: 12,
+      color: isDark ? '#b0b0b0' : '#666',
+      fontWeight: '500',
+    },
+    headerIcon: {
+      marginBottom: 10,
+      color: isDark ? '#ffffff' : '#333',
+    },
+    navIcon: {
+      color: isDark ? '#b0b0b0' : '#666',
+    }
+  });
+
   if (!fontsLoaded) {
     return (
-      <View style={styles.loadingContainer}>
-        <Text style={styles.loadingText}>Loading...</Text>
+      <View style={dynamicStyles.loadingContainer}>
+        <Text style={dynamicStyles.loadingText}>Loading...</Text>
       </View>
     );
   }
 
   return (
-    <>
-      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
-      <SafeAreaView style={styles.container}>
+    <SafeAreaProvider>
+      <StatusBar 
+        barStyle={isDark ? "light-content" : "dark-content"} 
+        backgroundColor={isDark ? "#121212" : "#fff"} 
+      />
+      <SafeAreaView style={dynamicStyles.container}>
         <Animated.View 
           style={[
             styles.content,
@@ -82,9 +146,9 @@ export default function App() {
           ]}
         >
           <View style={styles.header}>
-            <Gamepad2 size={32} color="#333" style={styles.headerIcon} />
-            <Text style={styles.title}>Tic Tac Toe</Text>
-            <Text style={styles.subtitle}>Multiplayer Edition</Text>
+            <Gamepad2 size={32} color={isDark ? '#ffffff' : '#333'} style={styles.headerIcon} />
+            <Text style={dynamicStyles.title}>Tic Tac Toe</Text>
+            <Text style={dynamicStyles.subtitle}>Multiplayer Edition</Text>
           </View>
 
           <View style={styles.buttonsContainer}>
@@ -119,14 +183,14 @@ export default function App() {
             </TouchableOpacity>
           </View>
 
-          <View style={styles.bottomNav}>
+          <View style={dynamicStyles.bottomNav}>
             <TouchableOpacity 
               style={styles.navButton}
               onPress={() => handleNavPress('profile')}
               activeOpacity={0.7}
             >
-              <UserRound size={28} color="#666" />
-              <Text style={styles.navText}>Profile</Text>
+              <UserRound size={28} color={isDark ? '#b0b0b0' : '#666'} />
+              <Text style={dynamicStyles.navText}>Profile</Text>
             </TouchableOpacity>
 
             <TouchableOpacity 
@@ -134,31 +198,17 @@ export default function App() {
               onPress={() => handleNavPress('settings')}
               activeOpacity={0.7}
             >
-              <Settings size={28} color="#666" />
-              <Text style={styles.navText}>Settings</Text>
+              <Settings size={28} color={isDark ? '#b0b0b0' : '#666'} />
+              <Text style={dynamicStyles.navText}>Settings</Text>
             </TouchableOpacity>
           </View>
         </Animated.View>
       </SafeAreaView>
-    </>
+    </SafeAreaProvider>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f8f9fa',
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f8f9fa',
-  },
-  loadingText: {
-    fontSize: 18,
-    color: '#666',
-  },
   content: {
     flex: 1,
   },
@@ -169,18 +219,6 @@ const styles = StyleSheet.create({
   },
   headerIcon: {
     marginBottom: 10,
-  },
-  title: {
-    fontSize: Math.min(width * 0.12, 48),
-    fontFamily: 'Chango-Regular',
-    textAlign: 'center',
-    color: '#2c3e50',
-    marginBottom: 5,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#7f8c8d',
-    fontWeight: '500',
   },
   buttonsContainer: {
     flex: 1,
@@ -227,25 +265,8 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '500',
   },
-  bottomNav: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: 20,
-    paddingHorizontal: 40,
-    backgroundColor: '#fff',
-    borderTopWidth: 1,
-    borderTopColor: '#ecf0f1',
-    marginBottom: -30,
-    paddingBottom: 50,
-  },
   navButton: {
     alignItems: 'center',
     padding: 10,
-  },
-  navText: {
-    marginTop: 4,
-    fontSize: 12,
-    color: '#666',
-    fontWeight: '500',
   },
 });
