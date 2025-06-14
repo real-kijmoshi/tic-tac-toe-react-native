@@ -1,20 +1,21 @@
-# Tic Tac Toe Mobile Game (Work in progress 🏗️)
+# Tic Tac Toe Mobile Game 
 
 A modern, multiplayer Tic Tac Toe game built with React Native and Expo.
 
 <div style="display: flex; gap: 20px; justify-content: center; align-items: center;">
-    <img src="./screenshots/home-mockup.jpg" alt="Gameplay Screenshot" width="300" />
-    <img src="./screenshots/home-dark.jpg" alt="Gameplay Screenshot Dark Mode" width="300" />
+    <img src="./screenshots/1.PNG" alt="Screenshot 1" width="300" />
+    <img src="./screenshots/2.PNG" alt="Screenshot 2" width="300" />
+    <img src="./screenshots/3.PNG" alt="Screenshot 3" width="300" />
+    <img src="./screenshots/4.PNG" alt="Screenshot 4" width="300" />
 </div>
 
 ## Features
 
 - Classic Tic Tac Toe gameplay
+- Multiplayer mode with real-time updates
 - Beautiful and modern user interface
-- Custom font integration (Chango)
 - Mobile-first design
 - Responsive layout for different screen sizes
-- Adaptive icons and splash screens
 
 ## Technologies Used
 
@@ -22,6 +23,11 @@ A modern, multiplayer Tic Tac Toe game built with React Native and Expo.
 - Expo
 - JavaScript/JSX
 - Custom Assets and Fonts
+
+### Backend
+- Socket.IO for real-time communication
+- Node.js for server-side logic
+- Express.js for API endpoints
 
 ## Getting Started
 
@@ -60,24 +66,6 @@ yarn start
 
 5. Use the Expo Go app on your mobile device to scan the QR code, or run on an emulator.
 
-## Project Structure
-
-```
-tic-tac-toe-multiplayer/
-├── app.json           # Expo configuration
-├── index.js          # Entry point
-├── package.json      # Dependencies and scripts
-├── assets/          # Static assets
-│   ├── adaptive-icon.png
-│   ├── favicon.png
-│   ├── icon.png
-│   ├── splash-icon.png
-│   └── fonts/
-│       └── Chango-Regular.ttf
-└── src/
-    └── App.jsx      # Main application component
-```
-
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
@@ -85,3 +73,8 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+### ToDo
+- [ ] Settings page
+- [ ] authentication
+- [ ] Leaderboard

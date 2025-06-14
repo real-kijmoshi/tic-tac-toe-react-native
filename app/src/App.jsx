@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { 
   StyleSheet, 
   Text, 
@@ -8,7 +8,8 @@ import {
   StatusBar,
   Alert,
   Dimensions,
-  useColorScheme
+  useColorScheme,
+  ActivityIndicator
 } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useFonts } from 'expo-font';
@@ -28,11 +29,13 @@ export default function App() {
     'Chango-Regular': require('../assets/fonts/Chango-Regular.ttf'),
   });
 
-  const [fadeAnim] = useState(new Animated.Value(0));
-  const [scaleAnim] = useState(new Animated.Value(0.8));
+  // Create refs for animations
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const scaleAnim = useRef(new Animated.Value(0.8)).current;
 
   useEffect(() => {
     if (fontsLoaded) {
+      // Run animations when fonts are loaded
       Animated.parallel([
         Animated.timing(fadeAnim, {
           toValue: 1,
@@ -82,6 +85,7 @@ export default function App() {
     loadingText: {
       fontSize: 18,
       color: isDark ? '#e0e0e0' : '#666',
+      marginTop: 10,
     },
     title: {
       fontSize: Math.min(width * 0.12, 48),
@@ -124,6 +128,7 @@ export default function App() {
   if (!fontsLoaded) {
     return (
       <View style={dynamicStyles.loadingContainer}>
+        <ActivityIndicator size="large" color={isDark ? '#e0e0e0' : '#666'} />
         <Text style={dynamicStyles.loadingText}>Loading...</Text>
       </View>
     );
@@ -138,7 +143,6 @@ export default function App() {
       />
     );
   }
-
 
   return (
     <SafeAreaProvider>
